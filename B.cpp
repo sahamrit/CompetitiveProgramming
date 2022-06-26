@@ -1,0 +1,131 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define endl "\n"
+#define fastio ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+//STANDARD DATA TYPES
+#define ll long long
+#define llu unsigned long long
+#define ld long double
+//ADV DATA TYPES
+#define pii pair < int , int >
+#define pll pair < ll, ll >
+#define mp make_pair
+#define ff first
+#define ss second
+//C ++ DS
+#define vi vector < int >
+#define vll vector < ll >
+#define pb push_back
+#define pf push_front
+#define iter :: iterator
+#define all(x) x.begin(),x.end()
+
+//priority_queue < pii, vector < pii >, greater < pii > > pq;
+//lower_bound(v.begin(),v.end(),20);//for any sorted container
+//CONSTANTS
+#define MOD 998244353
+#define INF 0x3f3f3f3f
+#define MAXN (int)(1e5+1)
+//MOD OPERATIONS
+inline ll fpow(ll n, ll k, ll p = MOD) {ll r = 1; for (; k; k >>= 1) {if (k & 1) r = r * n % p; n = n * n % p;} return r;}
+inline ll inv(ll a, ll p = MOD) {return fpow(a, p - 2, p);}
+inline ll addmod(ll a, ll val, ll p = MOD) {{if ((a = (a + val)) >= p) a -= p;} return a;}
+inline ll submod(ll a, ll val, ll p = MOD) {{if ((a = (a - val)) < 0) a += p;}return a;}
+inline ll mult(ll a, ll b, ll p = MOD) {return (ll) a * b % p;}
+//DEBUG
+#define shout()  {cout << "I'm Here...!!!" << endl;}
+#define dbg(x) { cout<< #x << ": " << (x) << endl; }
+#define dbg2(x,y) { cout<< #x << ": " << (x) << " , " << #y << ": " << (y) << endl; }
+ll srch(ld x,ld p){
+	if(1>=x)return 1;
+	ll l=2,r=1e14;
+	while(l<r){
+		ll mid=l+(r-l)/2;
+		if(log10(mid)*p>=log10(x)){
+			r=mid;
+		}
+		else l=mid+1;
+	}
+	return l;
+}
+ll srch1(ld x,ld p){
+	
+	ll l=1,r=1e14;
+	while(l<r){
+		ll mid=l+(r-l+1)/2;
+		if(log10(mid)*p<=log10(x)){
+			l=mid;
+		}
+		else r=mid-1;
+	}
+	return l;
+}
+int main()
+{
+	fastio;
+	int n;cin>>n;
+	vll a(n);
+	ll ans=0;
+	for(int i=0;i<n;i++){
+		cin>>a[i];
+		ans+=(a[i]-1);
+	}
+	sort(all(a));
+	
+	set<ll> cand;cand.insert(1);
+	set<ll> cand1;
+	vll pref(n+1,0);
+	for(int i=1;i<=n;i++)pref[i]=pref[i-1]+a[i-1];
+	for(int i=0;i<n;i++){
+		ll x=a[i];
+		if(i){
+			ll r=srch(x,i);
+			cand.insert(r);
+			r=srch1(x,i);
+			cand1.insert(r);
+		}
+	}
+	for(auto u:cand){
+		if(u==1)continue;
+		int l=0,r=n-1;
+		if(n*log10(u)>=18)continue;
+		while(l<r){
+			int mid=l+(r-l)/2;
+			if(mid*log10(u)>=log10(a[mid])){
+				r=mid;
+			}
+			else l=mid+1;
+		}
+		ll temp=0;
+		if(l-1>=0){
+			temp+=pref[l];
+			temp-=(((ll)pow(u,l-1)-1)/(u-1));
+		}
+		ll xx=(((ll)pow(u,l)-1)/(u-1));
+		temp-=(pref[n]-pref[l]);
+		temp+=((((ll)pow(u,n)-1)/(u-1))-xx);
+		ans=min(ans,temp);
+	}
+	for(auto u:cand1){
+		if(u==1)continue;
+		int l=0,r=n-1;
+		if(n*log10(u)>=18)continue;
+		while(l<r){
+			int mid=l+(r-l+1)/2;
+			if(mid*log10(u)<=log10(a[mid])){
+				r=mid;
+			}
+			else l=mid+1;
+		}
+		ll temp=0;
+		if(l>=0){
+			temp+=pref[l+1];
+			temp-=(((ll)pow(u,l+1)-1)/(u-1));
+		}
+		ll xx=(((ll)pow(u,l+1)-1)/(u-1));
+		temp-=(pref[n]-pref[l+1]);
+		temp+=((((ll)pow(u,n)-1)/(u-1))-xx);
+		ans=min(ans,temp);
+	}	
+	cout<<ans<<endl;
+}
