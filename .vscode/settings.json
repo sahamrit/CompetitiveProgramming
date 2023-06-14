@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "MLTable": "yaml",
+        "*.json": "jsonc",
+        "vector": "cpp",
+        "iosfwd": "cpp",
+        "cstdio": "cpp",
+        "type_traits": "cpp"
+    }
+}
